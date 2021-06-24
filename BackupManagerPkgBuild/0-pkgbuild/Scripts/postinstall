@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# postinstall
+#
+#  add the application to user login items via applescript
+#  then start the application as the current user
+
+# update these variables
+APPNAME="DanW Backup Manager"
+APPPATH="/Applications/DanW Backup Manager.app"
+# $USER passed by installer
+
+# delete the app from login items if it exists
+# then add it again
+osascript -e "tell application \"System Events\"
+                  if exists login item \"$APPNAME\" then delete login item \"$APPNAME\"
+                  make new login item at end of login items with properties {name:\"$APPNAME\", path:\"$APPPATH\", hidden:false}
+              end tell"
+
+# start the application
+su "$USER" -c "open \"$APPPATH\""
+
+# success
+exit 0

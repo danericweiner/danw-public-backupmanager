@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# makepackage
+#
+#  create the package and the product from the .app file
+#  creates the installer using pkgbuild and productbuild
+#
+
+APPNAME="DanW Backup Manager"
+RELEASEDIR="../bin/Release"
+SOURCEDIR="$RELEASEDIR/Xamarin"
+OUTDIR="$RELEASEDIR/PkgBuild"
+ROOTDIR="$OUTDIR/Root"
+PKGBUILD="0-pkgbuild"
+PRODUCTBUILD="1-productbuild"
+
+# clean the directory and create the subfolders
+rm -rf "$OUTDIR"
+mkdir -p "$ROOTDIR/Applications"
+mkdir -p "$OUTDIR/Package"
+cp -r "$SOURCEDIR/$APPNAME.app" "$ROOTDIR/Applications/$APPNAME.app"
+
+# create the package
+pkgbuild --root "$ROOTDIR" \
+    --scripts "$PKGBUILD/Scripts" \
+    --component-plist "$PKGBUILD/App.plist" \
+    "$OUTDIR/Package/$APPNAME.pkg"
+
+# create the product
+productbuild --package-path "$OUTDIR/Package" "$OUTDIR/$APPNAME.pkg" \
+             --distribution "$PRODUCTBUILD/Distribution"
+
+# success
+exit 0

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+    <Configurations>Debug;Release;Install</Configurations>    
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Install|AnyCPU'">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Install|x64'">
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Templates\HtmlLog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\HtmlLog.cshtml" />
+  </ItemGroup> 
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.43.0.1860" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RazorLight.Unofficial" Version="2.0.0-beta1.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="HtmlLogger.cs" />
+    <Compile Remove="LogModelExtensions.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <pkg-ref id="org.danericweiner.backupmanager"/>
+    <options customize="never" require-scripts="false"/>
+    <choices-outline>
+        <line choice="default">
+            <line choice="org.danericweiner.backupmanager"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="org.danericweiner.backupmanager" visible="false">
+        <pkg-ref id="org.danericweiner.backupmanager"/>
+    </choice>
+    <pkg-ref id="org.danericweiner.backupmanager" version="1.0" onConclusion="none">DanW%20Backup%20Manager.pkg</pkg-ref>
+</installer-gui-script>

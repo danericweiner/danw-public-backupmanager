@@ -1,0 +1,29 @@
+# User-specific
+.vs/
+*.suo
+*.vbproj.user
+*.csproj.user
+*.vshost.exe
+*.vshost.exe.*
+*.wixproj.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages Directory
+packages/
+
+# Compiled source
+*.pdb
+
+# System files
+Thumbs.db
+
+# https://stackoverflow.com/questions/5533050/gitignore-exclude-folder-but-include-specific-subfolder
+# include top level Release folder
+!/bin/
+/bin/*
+!/bin/Release/
+/bin/Release/*
+!/bin/Release/MacOS\ x64/

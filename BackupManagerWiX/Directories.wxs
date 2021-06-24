@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?include Defines.wxi ?>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+
+      <!-- Start menu-->
+      <Directory Id="ProgramMenuFolder" >
+        <Directory Id="ProgramMenuInstallRoot" Name="$(var.Company)" />
+      </Directory>
+
+      <!-- Startup Apps -->
+      <Directory Id="StartupFolder">
+      </Directory>
+
+      <!-- Program Files (64-bit) folder -->
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="InstallRoot" Name="$(var.Company)">
+          <Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+        </Directory>
+      </Directory>
+
+      <!-- AppData folder -->
+      <Directory Id="LocalAppDataFolder">        
+      </Directory>
+
+    </Directory>
+  </Fragment>
+</Wix>

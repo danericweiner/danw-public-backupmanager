@@ -1,0 +1,14 @@
+#!/bin/bash
+# move this script to ".git/hooks/post-merge" and "chmod 755" it
+# Optional: run "git config core.filemode false" to stop seeing chmods in changed files
+#           for this repository only
+
+echo -n "Updating permissions with the post-merge hook..."
+
+# Set the file permissions
+chmod 755 bin/Release/MacOS\ x64/DanW\ Backup\ Manager
+chmod -R 755 BackupManagerPkgBuild
+
+echo "OK"
+
+exit 0

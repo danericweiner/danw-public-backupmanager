@@ -1,0 +1,194 @@
+﻿@{ Layout = null; }
+@using BackupManagerLibrary.Models
+@using BackupManagerLibrary
+@model BackupManagerLogger
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 11.5pt;
+        }
+
+        #divMain {
+            width: 830px;
+        }
+
+        div.Data {
+            padding: 5px;
+            border: 1px solid gray;
+            background-color: #eeeeee;
+        }
+
+        table.Data {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table.Processes {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border: 1px solid gray;
+        }
+
+        table.Processes td {
+            border: 1px solid gray;
+            padding: 5px;
+            text-align: center;
+        }
+
+        table.Processes tr.Header > td {
+            background-color: #d3d3d3;
+            font-weight: bold;
+        }
+
+        table.Processes tr.BodyRow > td.Left {
+            text-align: left;
+        }
+
+        table.Processes tr.BodyRow.Skipped > td {
+            background-color: #eeeeee;
+        }
+
+        table.Processes tr.BodyRow.Information > td {
+        }
+
+        table.Processes tr.BodyRow.Warning > td {
+        }
+
+        table.Processes tr.BodyRow.Error > td {
+        }
+
+        table.Processes tr.BodyRow > td.Skipped {
+        }
+
+        table.Processes tr.BodyRow > td.Information {
+        }
+
+        table.Processes tr.BodyRow > td.Warning {
+            color: darkorange;
+        }
+
+        table.Processes tr.BodyRow > td.Error {
+            color: red;
+        }
+
+        td.Label {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        td.Value {
+            padding-right: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        div.Messages {
+            display: block;
+            width: 100%;
+            white-space: pre-line;
+        }
+
+        div.Messages span.Information {
+        }
+
+        div.Messages span.Warning {
+            color: darkorange;
+        }
+
+        div.Messages span.Error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="divMain">
+        <div class="Data">
+            <table class="Data">
+                <tr>
+                    <td class="Label">Action:</td>
+                    <td class="Value" colspan="3">@Model.ActionLog.Name</td>
+                    <td class="Label">App:</td>
+                    <td class="Value" colspan="3">@Model.ApplicationLongName</td>
+                </tr>
+                <tr>
+                    <td class="Label">Version:</td>
+                    <td class="Value">@Model.ApplicationVersion</td>
+                    <td class="Label">Computer:</td>
+                    <td class="Value" colspan="3">@Model.MachineName</td>
+                    <td class="Label">Cron:</td>
+                    <td class="Value">@Model.ActionLog.CronSchedule</td>
+                </tr>
+                <tr>
+                    <td class="Label">Date:</td>
+                    <td class="Value">@Model.ActionLog.StartTime.ToString("MM/dd/yyyy")</td>
+                    <td class="Label">Start Time:</td>
+                    <td class="Value">@Model.ActionLog.StartTime.ToString("hh:mm:ss tt")</td>
+                    <td class="Label">End Time:</td>
+                    <td class="Value">@Model.ActionLog.EndTime.ToString("hh:mm:ss tt")</td>
+                    <td class="Label">Total Time:</td>
+                    <td class="Value">@Model.ActionLog.Duration.ToString(@"hh\:mm\:ss")</td>
+                </tr>
+            </table>
+        </div>
+        @if (Model.ActionLog.Messages.Count > 0) {
+            int messagesToDisplay = Math.Min(Constants.Output.EmailedMaximumPerProcessMessages, Model.ActionLog.Messages.Count);
+            int messagesNotDisplayed = Model.ActionLog.Messages.Count - Constants.Output.EmailedMaximumPerProcessMessages;
+            <div class="Messages">
+                @for (int i = 0; i < messagesToDisplay; i++) {
+                    <span class="@Model.ActionLog.Messages[i].Status.CssClass()">@Model.ActionLog.Messages[i].Message</span>
+                }
+                @if (messagesNotDisplayed > 0) {
+                    <span class="@ExecutionMessageStatus.Warning.CssClass()">(@messagesNotDisplayed.ToString("#,##0") more messages, see log)</span>
+                }
+            </div>
+        }
+        <br />
+        <table class="Data">
+            <tr>
+                <td class="Label">App Data:</td>
+                <td class="Value" colspan="7">@Model.ApplicationDataFolder</td>
+            </tr>
+            <tr>
+                <td class="Label">User Data:</td>
+                <td class="Value" colspan="7">@Model.UserDataFolder</td>
+            </tr>
+        </table>
+        <br />
+        <table class="Processes">
+            <tr class="Header">
+                <td>Result</td>
+                <td colspan="6">Process</td>
+                <td>hh:mm:ss</td>
+            </tr>
+            @foreach (ExecutionLog processLog in Model.ActionLog.ProcessLogs) {
+                <tr class="BodyRow @processLog.Status.CssClass()">
+                    <td class="@processLog.Status.CssClass()">@processLog.Status.ToHtml()</td>
+                    <td class="Left" colspan="6">@processLog.Name</td>
+                    <td>@processLog.Duration.ToString(@"hh\:mm\:ss")</td>
+                </tr>
+            }
+        </table>
+        @foreach (ExecutionLog processLog in Model.ActionLog.ProcessLogs) {
+            if (processLog.Messages.Count > 0) {
+                int messagesToDisplay = Math.Min(Constants.Output.EmailedMaximumPerProcessMessages, processLog.Messages.Count);
+                int messagesNotDisplayed = processLog.Messages.Count - Constants.Output.EmailedMaximumPerProcessMessages;
+                <div class="Messages">
+                    <span>@processLog.Name</span>
+                    @for (int i = 0; i < messagesToDisplay; i++) {
+                        <span class="@processLog.Messages[i].Status.CssClass()">@processLog.Messages[i].Message</span>
+                    }
+                    @if (messagesNotDisplayed > 0) {
+                        <span class="@ExecutionMessageStatus.Warning.CssClass()">(@messagesNotDisplayed.ToString("#,##0") more messages, see log)</span>
+                    }
+                </div>
+            }
+        }
+    </div>
+</body>
+</html>

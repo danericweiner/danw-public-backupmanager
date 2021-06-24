@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?include Defines.wxi ?>
+
+  <Product Id="$(var.BuildGUID)" 
+           Name="$(var.Company) $(var.ProductName) (64-bit)" 
+           Language="1033" 
+           Version="$(var.BuildVersion)" 
+           Manufacturer="$(var.Company)" 
+           UpgradeCode="$(var.ProductGUID)" >
+    
+		<Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Languages="1033" 
+             Manufacturer="$(var.Company)" 
+             Description="$(var.Description)"
+             Keywords="$(var.Keywords)" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
+    
+    <!-- Include .cab file into .msi file -->
+    <MediaTemplate EmbedCab="yes" />
+    
+    <Icon Id="AppIcon" SourceFile="$(var.BackupManagerDaemon.ProjectDir)\AppIcon.ico"/>
+
+    <!-- add/remove programs info -->
+    <Property Id="ARPPRODUCTICON">AppIcon</Property>
+    <Property Id="ARPURLINFOABOUT">$(var.SupportURL)</Property>
+
+    <!-- Minimal installer style -->
+    <UIRef Id="WixUI_Minimal"/>
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\License.rtf" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
+    
+    <!-- Define components, shortcuts, files, etc for installer -->
+		<Feature Id="ProductFeature" Title="$(var.Company) $(var.ProductName)" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+	
+</Wix>

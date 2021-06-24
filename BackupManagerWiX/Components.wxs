@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?include Defines.wxi ?>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents">
+      <ComponentRef Id="AppShortcut"/>
+      <ComponentRef Id="StartupShortcut"/>
+      <ComponentRef Id="Executable"/>
+      <ComponentRef Id="DotNetExtractBaseDirectory"/>
+    </ComponentGroup>
+
+    <DirectoryRef Id="ProgramMenuInstallRoot">
+      <Component Id="AppShortcut" Guid="$(var.AppShortcutGUID)">
+        <!--Start menu -->
+        <Shortcut Id="AppShortcut"
+                  Name="$(var.ProductName) by $(var.Company)"
+                  Target="[INSTALLFOLDER]$(var.Executable)"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+
+        <!--Remove Start Menu Folder on Uninstall -->
+        <RemoveFolder Id="RemoveStartMenuFolder" Directory="ProgramMenuInstallRoot" On="uninstall"/>
+        <RegistryValue Id="RegAppShortcutKey" Root="HKCU" Key="SOFTWARE\$(var.Company)\$(var.ProductName)" Name="AppShortcut" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="StartupFolder">
+      <Component Id="StartupShortcut" Guid="$(var.StartupShortcutGUID)">
+        <!--Startup apps -->
+        <Shortcut Id="StartupShortcut"
+                  Name="$(var.Company) $(var.ProductName)"
+                  Target="[INSTALLFOLDER]$(var.Executable)"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+
+        <RegistryValue Id="RegStartupShortcutKey" Root="HKCU" Key="SOFTWARE\$(var.Company)\$(var.ProductName)" Name="StartupShortcut" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLFOLDER" FileSource="$(var.ExecutableDirectory)">
+      <Component Id="Executable" Guid="$(var.ExecutableGUID)">
+
+        <!-- Installed file -->
+        <File Id="Executable" Name="$(var.Executable)" KeyPath="yes"/>
+
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="LocalAppDataFolder">
+      <Component Id="DotNetExtractBaseDirectory" Guid="$(var.DotNetExtractBaseDirectoryGUID)">
+        
+        <!-- Extract Directory for the PublishSingleFile since Temp files get cleaned up -->
+        <Environment Id="DOTNET_BUNDLE_EXTRACT_BASE_DIR" Name="DOTNET_BUNDLE_EXTRACT_BASE_DIR" Value="[LocalAppDataFolder].net" Permanent="no" Part="all" Action="set" System="yes" />
+
+        <RegistryValue Id="DotNetExtractBaseDirectoryKey" Root="HKCU" Key="SOFTWARE\$(var.Company)\$(var.ProductName)" Name="DotNetExtractBaseDirectory" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Execute deferred, after the environment variable is set -->
+    <CustomAction Id="ExecuteDeferred"
+          Execute="deferred"
+          Impersonate="no"
+          Return="asyncNoWait"
+          FileKey="Executable"
+          ExeCommand="" />
+
+    <InstallExecuteSequence>
+      <Custom Action="ExecuteDeferred" Before="InstallFinalize">NOT Installed</Custom>
+    </InstallExecuteSequence>
+
+  </Fragment>
+</Wix>

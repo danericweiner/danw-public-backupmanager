@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define BuildVersion=2.2 ?>
+  <?define BuildGUID="{}" ?>
+  <?define ProductGUID="{}" ?>
+  <?define Company="DanW" ?>
+  <?define ProductName="Backup Manager" ?>
+  <?define ExecutableDirectory="..\bin\Release\Windows x64\" ?>
+  <?define Executable="DanW Backup Manager.exe" ?>
+  <?define ExecutableGUID="{}" ?>
+  <?define AppShortcutGUID="{}" ?>  
+  <?define StartupShortcutGUID="{}" ?>
+  <?define DotNetExtractBaseDirectoryGUID="{}" ?>
+  <?define SupportURL="https://support.danericweiner.com"?>
+  <?define Description="Bring cloud data down to your local machine on a schedule." ?>
+  <?define Keywords="dotnet,core,danw,backup" ?>
+</Include>
